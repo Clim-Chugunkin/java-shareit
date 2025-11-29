@@ -1,4 +1,6 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dal.repository;
+
+import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 

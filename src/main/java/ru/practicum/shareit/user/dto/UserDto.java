@@ -1,4 +1,4 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -9,7 +9,7 @@ import lombok.Value;
 @Value
 @Builder(toBuilder = true)
 @AllArgsConstructor
-public class User {
+public class UserDto {
     Long id;
     @NotNull(message = "не указана почта")
     @Email(message = "почта указана неправильно")

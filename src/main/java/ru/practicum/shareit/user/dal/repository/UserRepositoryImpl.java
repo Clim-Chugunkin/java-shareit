@@ -1,8 +1,9 @@
-package ru.practicum.shareit.user;
+package ru.practicum.shareit.user.dal.repository;
 
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.BadEmailException;
 import ru.practicum.shareit.exception.ConditionsNotMetException;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,7 +37,7 @@ public class UserRepositoryImpl implements UserRepository {
         User oldUser = getUserById(user.getId());
 
         //check new email
-        if (user.getEmail() != null){
+        if (user.getEmail() != null) {
             checkUserEmail(user);
         }
 
