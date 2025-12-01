@@ -28,9 +28,16 @@ public class ExceptionApiHandler {
     }
 
     @ExceptionHandler(BadEmailException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorMessage handleBadEmailException(BadEmailException exception) {
         log.error(exception.getMessage());
         return new ErrorMessage(exception.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorMessage handleAllExceptions(Throwable ex) {
+        log.error("An unexpected error occurred");
+        return new ErrorMessage("An unexpected error occurred", LocalDateTime.now());
     }
 }

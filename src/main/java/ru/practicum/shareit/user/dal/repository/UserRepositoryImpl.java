@@ -31,11 +31,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User update(User user) {
-        if (user.getId() == null) {
-            throw new ConditionsNotMetException("Id должен быть указан");
-        }
         User oldUser = getUserById(user.getId());
-
         //check new email
         if (user.getEmail() != null) {
             checkUserEmail(user);

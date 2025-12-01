@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.exception.ConditionsNotMetException;
 import ru.practicum.shareit.item.dal.repository.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.dal.repository.UserRepository;
@@ -22,7 +23,11 @@ public class ItemService {
     }
 
     public Item getItemById(Long id) {
-        return itemRepository.getItemById(id);
+        Item item = itemRepository.getItemById(id);
+        if (item == null) {
+            throw new ConditionsNotMetException("такогй вещи нет");
+        }
+        return item;
     }
 
     public Item addItem(Item newItem) {
@@ -33,6 +38,9 @@ public class ItemService {
     }
 
     public Item updateItem(Item item) {
+        if (item.getId() == null) {
+            throw new ConditionsNotMetException("Id должен быть указан");
+        }
         userRepository.getUserById(item.getOwner());
         return itemRepository.update(item);
     }

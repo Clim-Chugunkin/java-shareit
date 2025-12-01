@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.dal.repository;
 
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.exception.ConditionsNotMetException;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.HashMap;
@@ -30,9 +29,6 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item update(Item item) {
-        if (item.getId() == null) {
-            throw new ConditionsNotMetException("Id должен быть указан");
-        }
         Item oldItem = getItemById(item.getId());
         Item itemUpdated = oldItem.toBuilder()
                 .name((item.getName() != null) ? item.getName() : oldItem.getName())
@@ -45,11 +41,7 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item getItemById(long id) {
-        Item item = items.get(id);
-        if (item == null) {
-            throw new ConditionsNotMetException("такогй вещи нет");
-        }
-        return item;
+        return items.get(id);
     }
 
     @Override
