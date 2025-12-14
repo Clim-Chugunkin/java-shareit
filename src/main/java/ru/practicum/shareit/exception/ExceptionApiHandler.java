@@ -1,0 +1,43 @@
+package ru.practicum.shareit.exception;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.time.LocalDateTime;
+
+@Slf4j
+@RestControllerAdvice
+public class ExceptionApiHandler {
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(ConditionsNotMetException.class)
+    public ErrorMessage handleConditionsNotMetException(ConditionsNotMetException exception) {
+        log.error(exception.getMessage());
+        return new ErrorMessage(exception.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        String error = exception.getBindingResult().getFieldErrors().getFirst().getDefaultMessage();
+        log.error(error);
+        return new ErrorMessage(error, LocalDateTime.now());
+    }
+
+    @ExceptionHandler(BadEmailException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorMessage handleBadEmailException(BadEmailException exception) {
+        log.error(exception.getMessage());
+        return new ErrorMessage(exception.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ErrorMessage handleAllExceptions(Throwable ex) {
+        log.error("An unexpected error occurred");
+        return new ErrorMessage("An unexpected error occurred", LocalDateTime.now());
+    }
+}
