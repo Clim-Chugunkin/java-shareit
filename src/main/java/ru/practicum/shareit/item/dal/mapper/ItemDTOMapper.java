@@ -27,8 +27,8 @@ public class ItemDTOMapper {
         return item;
     }
 
-    public static ItemDto toItemDTO(Item item, LocalDateTime lastBooking, LocalDateTime nextBooking, List<Comment> comments){
-        return  ItemDto.builder()
+    public static ItemDto toItemDTO(Item item, LocalDateTime lastBooking, LocalDateTime nextBooking, List<Comment> comments) {
+        return ItemDto.builder()
                 .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())

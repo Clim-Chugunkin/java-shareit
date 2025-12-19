@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     public List<User> getUsers() {
@@ -21,11 +21,11 @@ public class UserServiceImpl implements UserService{
     }
 
     public User getUserById(long id) {
-        return userRepository.findById(id).orElseThrow(()->new ConditionsNotMetException("пользователь не найден"));
+        return userRepository.findById(id).orElseThrow(() -> new ConditionsNotMetException("пользователь не найден"));
     }
 
     public User addUser(User newUser) {
-        if (userRepository.findByEmail(newUser.getEmail()).isPresent()){
+        if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
             throw new BadEmailException("такой емаил уже есть");
         }
 
@@ -35,19 +35,19 @@ public class UserServiceImpl implements UserService{
     }
 
     public User updateUser(User newUser) {
-        User user = userRepository.findById(newUser.getId()).orElseThrow(()->new ConditionsNotMetException("нет такого пользователя"));
-        if (newUser.getEmail() != null){
-            if (userRepository.findByEmail(newUser.getEmail()).isPresent()){
+        User user = userRepository.findById(newUser.getId()).orElseThrow(() -> new ConditionsNotMetException("нет такого пользователя"));
+        if (newUser.getEmail() != null) {
+            if (userRepository.findByEmail(newUser.getEmail()).isPresent()) {
                 throw new BadEmailException("такой емаил уже есть");
             }
             user.setEmail(newUser.getEmail());
         }
-        user.setName((newUser.getName() == null)? user.getName() : newUser.getName());
+        user.setName((newUser.getName() == null) ? user.getName() : newUser.getName());
         return userRepository.save(user);
     }
 
     public void removeUser(long id) {
-        User user = userRepository.findById(id).orElseThrow(()->new ConditionsNotMetException("пользователь не найден"));
+        User user = userRepository.findById(id).orElseThrow(() -> new ConditionsNotMetException("пользователь не найден"));
         userRepository.deleteById(id);
         log.info("Пользователь {} удален", user.getName());
     }

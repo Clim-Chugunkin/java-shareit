@@ -28,9 +28,7 @@ public class ItemController {
 
     @GetMapping
     public List<ItemDto> getUserAllItems(@RequestHeader("X-Sharer-User-Id") Long userId) {
-        return itemService.getUserAllItems(userId).stream()
-                .map(ItemDTOMapper::toItemDTO)
-                .toList();
+        return itemService.getUserAllItems(userId);
     }
 
     @PostMapping

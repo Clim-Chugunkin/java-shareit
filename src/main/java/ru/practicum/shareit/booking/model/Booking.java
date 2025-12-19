@@ -1,7 +1,9 @@
 package ru.practicum.shareit.booking.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -23,10 +25,10 @@ public class Booking {
     @Column(name = "stop")
     LocalDateTime end;
     @ManyToOne
-    @JoinColumn(name="item_id")
+    @JoinColumn(name = "item_id")
     Item item;
     @ManyToOne
-    @JoinColumn(name="user_id")
+    @JoinColumn(name = "user_id")
     User booker;
     @Enumerated(EnumType.STRING)
     Status status;

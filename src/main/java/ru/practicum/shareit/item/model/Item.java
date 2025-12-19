@@ -1,7 +1,9 @@
 package ru.practicum.shareit.item.model;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * TODO Sprint add-controllers.
