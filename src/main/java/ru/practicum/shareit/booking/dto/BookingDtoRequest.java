@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.dto;
 
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,21 +9,17 @@ import ru.practicum.shareit.booking.model.Status;
 
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
 @Value
 @Builder(toBuilder = true)
 @AllArgsConstructor
-public class BookingDto {
+public class BookingDtoRequest {
     Long id;
     @NotNull(message = "не указана дата и время начала бронирования")
+    //@FutureOrPresent(message = "дата начала бронирования не должна быть в прошедшем")
     LocalDateTime start;
     @NotNull(message = "не указана дата и время конца бронирования")
+    //@FutureOrPresent(message = "дата конца бронирования не должна быть в прошедшем")
     LocalDateTime end;
     @NotNull(message = "не указана вещь, которую пользователь бронирует")
-    Long item;
-    @NotNull(message = "не указан пользователь, который осуществляет бронирование")
-    Long booker;
-    Status status;
+    Long itemId;
 }
