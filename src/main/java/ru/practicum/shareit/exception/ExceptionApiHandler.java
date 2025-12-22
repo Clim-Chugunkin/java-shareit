@@ -34,10 +34,17 @@ public class ExceptionApiHandler {
         return new ErrorMessage(exception.getMessage(), LocalDateTime.now());
     }
 
+    @ExceptionHandler(InvalidArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleInvalidArgumentException(InvalidArgumentException exception) {
+        log.error(exception.getMessage());
+        return new ErrorMessage(exception.getMessage(), LocalDateTime.now());
+    }
+
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorMessage handleAllExceptions(Throwable ex) {
-        log.error("An unexpected error occurred");
+        log.error(ex.getMessage());
         return new ErrorMessage("An unexpected error occurred", LocalDateTime.now());
     }
 }
