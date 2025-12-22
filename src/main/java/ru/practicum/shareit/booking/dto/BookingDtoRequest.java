@@ -1,5 +1,7 @@
 package ru.practicum.shareit.booking.dto;
 
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,10 +15,10 @@ import java.time.LocalDateTime;
 public class BookingDtoRequest {
     Long id;
     @NotNull(message = "не указана дата и время начала бронирования")
-    //@FutureOrPresent(message = "дата начала бронирования не должна быть в прошедшем")
+    @FutureOrPresent(message = "дата начала бронирования не должна быть в прошедшем")
     LocalDateTime start;
     @NotNull(message = "не указана дата и время конца бронирования")
-    //@FutureOrPresent(message = "дата конца бронирования не должна быть в прошедшем")
+    @Future(message = "дата конца бронирования не должна быть в прошедшем")
     LocalDateTime end;
     @NotNull(message = "не указана вещь, которую пользователь бронирует")
     Long itemId;

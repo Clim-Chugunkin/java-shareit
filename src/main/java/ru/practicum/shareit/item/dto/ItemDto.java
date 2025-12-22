@@ -5,10 +5,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
-import ru.practicum.shareit.item.model.Comment;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
@@ -26,7 +22,4 @@ public class ItemDto {
     String description;
     @NotNull(message = "не указана доступность")
     Boolean available;
-    LocalDateTime lastBooking;
-    LocalDateTime nextBooking;
-    List<Comment> comments;
 }

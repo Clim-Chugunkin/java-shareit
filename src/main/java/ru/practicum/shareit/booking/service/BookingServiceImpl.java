@@ -39,9 +39,21 @@ public class BookingServiceImpl implements BookingService {
             throw new InvalidArgumentException("вещь недоступна");
         }
 
+        //check if booker is owner
+        if (booking.getBooker().getId() == booking.getItem().getOwner()) {
+            throw new InvalidArgumentException("владелец не может забронировать свою вещь");
+        }
+
         //check start not equal end
         if (booking.getStart().equals(booking.getEnd())) {
             throw new InvalidArgumentException("время начала бронирования должно быть до времени конца");
+        }
+
+        //check intersection
+        if (bookingRepository.checkIntersection(booking.getBooker().getId(),
+                booking.getItem().getId(),
+                booking.getStart(), booking.getEnd()) != 0) {
+            throw new InvalidArgumentException("пересечение бронирования");
         }
 
         booking.setStatus(Status.WAITING);
@@ -67,6 +79,10 @@ public class BookingServiceImpl implements BookingService {
         if (booking.getItem().getOwner() != userId) {
             throw new InvalidArgumentException("пользователь не является владельцем");
         }
+        //Подтверждать по логике можно только бронирования в статусе ожидания
+        if (booking.getStatus() != Status.WAITING) {
+            throw new InvalidArgumentException("подтвердить бронирование можно только со статусом WAITING");
+        }
         booking.setStatus((approved) ? Status.APPROVED : Status.REJECTED);
         return BookingDtoMapper.toBookingDto(bookingRepository.save(booking));
     }
@@ -78,7 +94,17 @@ public class BookingServiceImpl implements BookingService {
         userRepository.findById(userId)
                 .orElseThrow(() -> new ConditionsNotMetException("нет такого пользователя"));
 
-        return listFilter(bookingRepository.findByBookerId(userId), state);
+        LocalDateTime now = LocalDateTime.now();
+        List<Booking> tempBooking =
+                switch (state.toUpperCase()) {
+                    case "CURRENT" -> bookingRepository.findByBookerIdAndCurrent(userId);
+                    case "PAST" -> bookingRepository.findByBookerIdAndEndBefore(userId, now);
+                    case "FUTURE" -> bookingRepository.findByBookerIdAndStartAfter(userId, now);
+                    case "WAITING" -> bookingRepository.findByBookerIdAndStatus(userId, Status.WAITING);
+                    case "REJECTED" -> bookingRepository.findByBookerIdAndStatus(userId, Status.REJECTED);
+                    default -> bookingRepository.findByBookerId(userId);
+                };
+        return tempBooking.stream().map(BookingDtoMapper::toBookingDto).toList();
     }
 
     @Override
@@ -86,41 +112,15 @@ public class BookingServiceImpl implements BookingService {
         //check if user exists
         userRepository.findById(userId)
                 .orElseThrow(() -> new ConditionsNotMetException("нет такого пользователя"));
-
-        return listFilter(bookingRepository.getUserAllBooking(userId), state);
+        List<Booking> tempBooking =
+                switch (state.toUpperCase()) {
+                    case "CURRENT" -> bookingRepository.getUserAllBookingCurrent(userId);
+                    case "PAST" -> bookingRepository.getUserAllBookingPast(userId);
+                    case "FUTURE" -> bookingRepository.getUserAllBookingFuture(userId);
+                    case "WAITING" -> bookingRepository.getUserAllBookingStatus(userId, Status.WAITING);
+                    case "REJECTED" -> bookingRepository.getUserAllBookingStatus(userId, Status.REJECTED);
+                    default -> bookingRepository.getUserAllBooking(userId);
+                };
+        return tempBooking.stream().map(BookingDtoMapper::toBookingDto).toList();
     }
-
-    private List<BookingDtoResponse> listFilter(List<Booking> list, String state) {
-        LocalDateTime now = LocalDateTime.now();
-        switch (state.toUpperCase()) {
-            case "CURRENT" -> {
-                return list.stream().filter(booking ->
-                                (booking.getStart().isBefore(now) && booking.getEnd().isAfter(now)))
-                        .map(BookingDtoMapper::toBookingDto)
-                        .toList();
-            }
-            case "PAST" -> {
-                return list.stream().filter(booking -> booking.getEnd().isBefore(now))
-                        .map(BookingDtoMapper::toBookingDto)
-                        .toList();
-            }
-            case "FUTURE" -> {
-                return list.stream().filter(booking -> booking.getStart().isAfter(now))
-                        .map(BookingDtoMapper::toBookingDto)
-                        .toList();
-            }
-            case "WAITING" -> {
-                return list.stream().filter(booking -> (booking.getStatus() == Status.WAITING))
-                        .map(BookingDtoMapper::toBookingDto)
-                        .toList();
-            }
-            case "REJECTED" -> {
-                return list.stream().filter(booking -> (booking.getStatus() == Status.REJECTED))
-                        .map(BookingDtoMapper::toBookingDto)
-                        .toList();
-            }
-        }
-        return list.stream().map(BookingDtoMapper::toBookingDto).toList();
-    }
-
 }

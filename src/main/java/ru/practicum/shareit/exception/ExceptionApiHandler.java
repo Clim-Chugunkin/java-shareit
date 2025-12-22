@@ -44,7 +44,7 @@ public class ExceptionApiHandler {
     @ExceptionHandler(Throwable.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorMessage handleAllExceptions(Throwable ex) {
-        log.error("An unexpected error occurred");
+        log.error(ex.getMessage());
         return new ErrorMessage("An unexpected error occurred", LocalDateTime.now());
     }
 }

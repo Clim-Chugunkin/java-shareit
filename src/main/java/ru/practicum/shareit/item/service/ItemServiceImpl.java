@@ -7,10 +7,9 @@ import ru.practicum.shareit.booking.dal.repository.BookingRepository;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.exception.ConditionsNotMetException;
 import ru.practicum.shareit.exception.InvalidArgumentException;
-import ru.practicum.shareit.item.dal.mapper.ItemDTOMapper;
 import ru.practicum.shareit.item.dal.repository.CommentRepository;
 import ru.practicum.shareit.item.dal.repository.ItemRepository;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.dal.repository.UserRepository;
@@ -29,15 +28,12 @@ public class ItemServiceImpl implements ItemService {
     private final BookingRepository bookingRepository;
 
     @Override
-    public List<ItemDto> getUserAllItems(Long userId) {
-        return itemRepository.findByOwner(userId).stream()
-                .map(item -> ItemDTOMapper.toItemDTO(item, bookingRepository.findLastBooking(item.getId()), bookingRepository.findNextBooking(item.getId()), commentRepository.findByItemId(item.getId())))
-                .toList();
+    public List<ItemDtoResponse> getUserAllItems(Long userId) {
+        return itemRepository.getUserItems(userId);
     }
 
-    public ItemDto getItemById(Long id) {
-        Item item = itemRepository.findById(id).orElseThrow(() -> new ConditionsNotMetException("такой вещи нет"));
-        return ItemDTOMapper.toItemDTO(item, null, bookingRepository.findNextBooking(item.getId()), commentRepository.findByItemId(id));
+    public ItemDtoResponse getItemById(Long id) {
+        return itemRepository.getItemById(id).orElseThrow(() -> new ConditionsNotMetException("такой вещи нет"));
     }
 
     public Item addItem(Item newItem) {

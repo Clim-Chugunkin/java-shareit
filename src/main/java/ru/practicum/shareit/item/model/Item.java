@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.List;
+
 /**
  * TODO Sprint add-controllers.
  */
@@ -22,6 +24,8 @@ public class Item {
     Boolean available;
     long owner;
     long request;
+    @OneToMany(mappedBy = "itemId")
+    private List<Comment> comments;
 
     public Boolean isAvailable() {
         return available;

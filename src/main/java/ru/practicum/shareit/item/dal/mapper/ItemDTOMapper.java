@@ -1,11 +1,8 @@
 package ru.practicum.shareit.item.dal.mapper;
 
 import ru.practicum.shareit.item.dto.ItemDto;
-import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.item.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.model.Item;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 public class ItemDTOMapper {
 
@@ -16,26 +13,27 @@ public class ItemDTOMapper {
                 .description(item.getDescription())
                 .available(item.getAvailable())
                 .build();
+
     }
 
-    public static Item toItem(ItemDto itemDto) {
+    public static ItemDtoResponse toItemDtoResponse(Item item) {
+        ItemDtoResponse response = new ItemDtoResponse();
+        response.setId(item.getId());
+        response.setName(item.getName());
+        response.setDescription(item.getDescription());
+        response.setAvailable(item.getAvailable());
+        response.setComments(item.getComments());
+        return response;
+    }
+
+    public static Item toItem(ItemDto itemDto, Long ownerId, Long itemId) {
         Item item = new Item();
-        item.setId(itemDto.getId());
+        item.setId((itemId == null) ? itemDto.getId() : itemId);
         item.setName(itemDto.getName());
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
+        item.setOwner(ownerId);
         return item;
     }
 
-    public static ItemDto toItemDTO(Item item, LocalDateTime lastBooking, LocalDateTime nextBooking, List<Comment> comments) {
-        return ItemDto.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .lastBooking(lastBooking)
-                .nextBooking(nextBooking)
-                .comments(comments)
-                .build();
-    }
 }
