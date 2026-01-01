@@ -1,11 +1,19 @@
 package ru.practicum.shareit.booking.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.dal.repository.BookingRepository;
+import ru.practicum.shareit.booking.dto.BookingDtoResponse;
+import ru.practicum.shareit.booking.model.Booking;
 
-@Service
-@RequiredArgsConstructor
-public class BookingService {
-    private final BookingRepository bookingRepository;
+import java.util.List;
+
+
+public interface BookingService {
+    BookingDtoResponse addBooking(Booking booking);
+
+    BookingDtoResponse findById(Long id, Long userId);
+
+    BookingDtoResponse approveBooking(long userId, long bookingId, boolean approved);
+
+    List<BookingDtoResponse> getAllBookingsByUserId(Long userId, String state);
+
+    List<BookingDtoResponse> getUserAllBooking(Long userId, String state);
 }

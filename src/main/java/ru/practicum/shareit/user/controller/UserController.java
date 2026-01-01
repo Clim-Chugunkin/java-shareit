@@ -41,7 +41,8 @@ public class UserController {
     public UserDto update(@PathVariable long userId,
                           @RequestBody UserDto userDto) {
         User user = UserDtoMapper.toUser(userDto);
-        return UserDtoMapper.toUserDto(userService.updateUser(user.toBuilder().id(userId).build()));
+        user.setId(userId);
+        return UserDtoMapper.toUserDto(userService.updateUser(user));
     }
 
     @DeleteMapping("/{userId}")
