@@ -1,24 +1,21 @@
 package ru.practicum.shareit.request.dal.mapper;
 
+import ru.practicum.shareit.item.dal.mapper.ItemDTOMapper;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
+import ru.practicum.shareit.request.dto.ItemRequestResponseDto;
 import ru.practicum.shareit.request.model.ItemRequest;
 
 public class ItemRequestDtoMapper {
-    public static ItemRequestDto toRequestDto(ItemRequest itemRequest) {
-        return ItemRequestDto.builder()
-                .id(itemRequest.getId())
-                .description(itemRequest.getDescription())
-                .requestor(itemRequest.getRequestor())
-                .created(itemRequest.getCreated())
-                .build();
-    }
+    public static ItemRequestResponseDto toResponse(ItemRequest itemRequest) {
+        ItemRequestResponseDto response = new ItemRequestResponseDto();
+        response.setId(itemRequest.getId());
+        response.setDescription(itemRequest.getDescription());
+        response.setCreated(itemRequest.getCreated());
 
-    public static ItemRequest toItemRequest(ItemRequestDto itemRequestDto) {
-        return ItemRequest.builder()
-                .id(itemRequestDto.getId())
-                .description(itemRequestDto.getDescription())
-                .requestor(itemRequestDto.getRequestor())
-                .created(itemRequestDto.getCreated())
-                .build();
+
+        response.setItems((itemRequest.getAnswers() == null)? null : itemRequest.getAnswers().stream()
+                .map(ItemDTOMapper::toRequest)
+                .toList());
+        return response;
     }
 }
