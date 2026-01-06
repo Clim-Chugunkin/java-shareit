@@ -16,7 +16,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ItemRequestServiceImpl implements ItemRequestService{
+public class ItemRequestServiceImpl implements ItemRequestService {
 
     private final ItemRequestRepository itemRequestRepository;
     private final UserRepository userRepository;
@@ -25,7 +25,7 @@ public class ItemRequestServiceImpl implements ItemRequestService{
     public ItemRequestResponseDto save(ItemRequestDto itemRequestDto, Long userId) {
         //check if user exists
         User user = userRepository.findById(userId)
-                .orElseThrow(()->new ConditionsNotMetException("Такого пользователя нет"));
+                .orElseThrow(() -> new ConditionsNotMetException("Такого пользователя нет"));
         //create itemRequest from itemRequestDto
         ItemRequest itemRequest = new ItemRequest();
         itemRequest.setDescription(itemRequestDto.getDescription());

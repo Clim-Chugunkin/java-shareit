@@ -22,8 +22,8 @@ public class Item {
     String name;
     String description;
     Boolean available;
-    long owner;
-    long request;
+    Long owner;
+    Long request;
     @OneToMany(mappedBy = "itemId")
     private List<Comment> comments;
 

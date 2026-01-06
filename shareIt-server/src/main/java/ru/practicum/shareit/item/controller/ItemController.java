@@ -1,6 +1,5 @@
 package ru.practicum.shareit.item.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dal.mapper.ItemDTOMapper;
@@ -34,7 +33,7 @@ public class ItemController {
 
     @PostMapping
     public ItemDtoResponse addItem(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                   @Valid @RequestBody ItemDto itemDto) {
+                                   @RequestBody ItemDto itemDto) {
         Item item = ItemDTOMapper.toItem(itemDto, userId, null);
         return ItemDTOMapper.toItemDtoResponse(itemService.addItem(item));
     }

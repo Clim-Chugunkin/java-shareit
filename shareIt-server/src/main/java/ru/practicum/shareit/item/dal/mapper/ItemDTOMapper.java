@@ -4,7 +4,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemDtoForRequest;
 import ru.practicum.shareit.item.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.request.model.ItemRequest;
 
 public class ItemDTOMapper {
 
@@ -35,11 +34,11 @@ public class ItemDTOMapper {
         item.setDescription(itemDto.getDescription());
         item.setAvailable(itemDto.getAvailable());
         item.setOwner(ownerId);
-        item.setRequest(itemDto.getRequestId());
+        if (itemDto.getRequestId() != null) item.setRequest(itemDto.getRequestId());
         return item;
     }
 
-    public static ItemDtoForRequest toRequest(Item item){
+    public static ItemDtoForRequest toRequest(Item item) {
         ItemDtoForRequest itemDtoForRequest = new ItemDtoForRequest();
         itemDtoForRequest.setId(item.getId());
         itemDtoForRequest.setName(item.getName());

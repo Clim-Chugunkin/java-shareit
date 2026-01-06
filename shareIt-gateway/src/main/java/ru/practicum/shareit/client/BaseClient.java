@@ -1,22 +1,23 @@
 package ru.practicum.shareit.client;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
+import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
+import ru.practicum.shareit.exception.ConditionsNotMetException;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 public class BaseClient {
     protected final RestTemplate rest;
 
     public BaseClient(RestTemplate rest) {
         this.rest = rest;
+        rest.setErrorHandler(new CustomResponseErrorHandler());
     }
 
     protected ResponseEntity<Object> get(String path) {
@@ -118,4 +119,21 @@ public class BaseClient {
 
         return responseBuilder.build();
     }
+
+    private class CustomResponseErrorHandler implements ResponseErrorHandler {
+
+        @Override
+        public boolean hasError(ClientHttpResponse response) throws IOException {
+            return response.getStatusCode().is4xxClientError();
+        }
+
+        @Override
+        public void handleError(ClientHttpResponse response) throws IOException {
+            if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
+                throw new ConditionsNotMetException("такого пользователя/вещи нет");
+            }
+        }
+    }
+
+
 }

@@ -1,8 +1,9 @@
 package ru.practicum.shareit.request.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import ru.practicum.shareit.item.model.Comment;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import ru.practicum.shareit.item.model.Item;
 
 import java.time.LocalDateTime;

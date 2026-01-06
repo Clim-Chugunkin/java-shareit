@@ -63,7 +63,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingDtoResponse findById(Long id, Long userId) {
         Booking booking = bookingRepository.findById(id).orElseThrow(() -> new ConditionsNotMetException("такого бронирования нет"));
-        if (!((booking.getItem().getOwner() == userId) || (Objects.equals(booking.getBooker().getId(), userId)))) {
+        if (!((Objects.equals(booking.getItem().getOwner(), userId)) || (Objects.equals(booking.getBooker().getId(), userId)))) {
             throw new InvalidArgumentException("пользователь не является владелцем/создателем");
         }
 
