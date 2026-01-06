@@ -40,7 +40,7 @@ public class BookingServiceImpl implements BookingService {
         }
 
         //check if booker is owner
-        if (booking.getBooker().getId() == booking.getItem().getOwner()) {
+        if (Objects.equals(booking.getBooker().getId(), booking.getItem().getOwner())) {
             throw new InvalidArgumentException("владелец не может забронировать свою вещь");
         }
 
