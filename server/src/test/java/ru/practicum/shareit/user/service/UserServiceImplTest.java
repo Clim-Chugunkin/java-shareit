@@ -1,6 +1,7 @@
 package ru.practicum.shareit.user.service;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,20 +17,23 @@ import static org.junit.jupiter.api.Assertions.*;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class UserServiceImplTest {
     private final EntityManager em;
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @Test
     public void saveAndGetUserTest() {
         User user = generateTestUser();
         Long userId = userService.addUser(user).getId();
-        User us = userService.getUserById(userId);
+        TypedQuery<User> query = em.createQuery("Select u from User u where u.id = :id", User.class);
+        User us = query.setParameter("id", userId)
+                .getSingleResult();
         assertEquals(user.getEmail(), us.getEmail());
     }
 
     @Test
     public void deleteUser() {
         User user = generateTestUser();
-        Long userId = userService.addUser(user).getId();
+        em.persist(user);
+        Long userId = user.getId();
         assertNotNull(userId);
         userService.removeUser(userId);
         assertThrows(ConditionsNotMetException.class, () -> {
@@ -40,13 +44,16 @@ public class UserServiceImplTest {
     @Test
     public void updateUserTest() {
         User user = generateTestUser();
-        Long userId = userService.addUser(user).getId();
+        em.persist(user);
+        Long userId = user.getId();
         assertNotNull(userId);
         User newUser = new User();
         newUser.setId(userId);
         newUser.setEmail("newUser@mail.ru");
         userService.updateUser(newUser);
-        user = userService.getUserById(userId);
+        TypedQuery<User> query = em.createQuery("Select u from User u where u.id = :id", User.class);
+        user = query.setParameter("id", userId)
+                .getSingleResult();
         assertEquals("newUser@mail.ru", user.getEmail(), "wrong email");
     }
 

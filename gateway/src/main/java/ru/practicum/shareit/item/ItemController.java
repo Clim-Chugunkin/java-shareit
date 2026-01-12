@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.Comment;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 @RestController
@@ -44,14 +44,13 @@ public class ItemController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> search(@RequestParam String text) {
-        //if (text.isEmpty()) return new ArrayList<>();
         return itemClient.search(text);
     }
 
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> addComment(@RequestHeader("X-Sharer-User-Id") Long userId,
                                              @PathVariable(name = "itemId") Long itemId,
-                                             @RequestBody Comment comment) {
+                                             @Valid @RequestBody CommentDto comment) {
 
         return itemClient.addComment(userId, itemId, comment);
     }

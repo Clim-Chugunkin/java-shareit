@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request.service;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.request.dto.ItemRequestResponseDto;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserServiceImpl;
 import ru.practicum.shareit.user.service.UserServiceImplTest;
 
 import java.util.List;
@@ -20,13 +20,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ItemRequestServiceImplTest {
 
-    private final UserServiceImpl userService;
-    private final ItemRequestServiceImpl itemRequestService;
+    private final EntityManager em;
+    private final ItemRequestService itemRequestService;
 
     @Test
     public void addAndGetRequestTest() {
         User user = UserServiceImplTest.generateTestUser();
-        Long userId = userService.addUser(user).getId();
+        em.persist(user);
+        Long userId = user.getId();
         ItemRequestDto request = new ItemRequestDto();
         request.setDescription("new request");
         Long requestID = itemRequestService.save(request, userId).getId();
@@ -38,7 +39,8 @@ public class ItemRequestServiceImplTest {
     @Test
     public void getUserItemRequestsTest() {
         User user = UserServiceImplTest.generateTestUser();
-        Long userId = userService.addUser(user).getId();
+        em.persist(user);
+        Long userId = user.getId();
 
         ItemRequestDto request = new ItemRequestDto();
         request.setDescription("new request");

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class Comment {
+public class CommentDto {
     private Long id;
     private Long itemId;
     private String text;

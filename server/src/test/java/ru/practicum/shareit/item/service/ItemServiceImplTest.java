@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.service;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.item.dto.ItemDtoResponse;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.service.UserServiceImpl;
 import ru.practicum.shareit.user.service.UserServiceImplTest;
 
 import java.util.List;
@@ -19,14 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class ItemServiceImplTest {
-
-    private final ItemServiceImpl itemService;
-    private final UserServiceImpl userService;
+    private final EntityManager em;
+    private final ItemService itemService;
 
     @Test
     public void getUsersAllItemsTest() {
         User user = UserServiceImplTest.generateTestUser();
-        Long userId = userService.addUser(user).getId();
+        em.persist(user);
+        Long userId = user.getId();
         Item item = generateItem(userId);
         itemService.addItem(item);
         Item item2 = generateItem(userId);
@@ -40,7 +40,8 @@ public class ItemServiceImplTest {
     @Test
     public void addItemAndGetItemByIdTest() {
         User user = UserServiceImplTest.generateTestUser();
-        Long userId = userService.addUser(user).getId();
+        em.persist(user);
+        Long userId = user.getId();
         Item item = generateItem(userId);
         Long itemId = itemService.addItem(item).getId();
         ItemDtoResponse newItem = itemService.getItemById(itemId);
@@ -52,7 +53,8 @@ public class ItemServiceImplTest {
     @Test
     public void updateItemTest() {
         User user = UserServiceImplTest.generateTestUser();
-        Long userId = userService.addUser(user).getId();
+        em.persist(user);
+        Long userId = user.getId();
         Item item = generateItem(userId);
         Long itemId = itemService.addItem(item).getId();
         Item newItem = new Item();
@@ -69,7 +71,8 @@ public class ItemServiceImplTest {
     @Test
     public void searchTest() {
         User user = UserServiceImplTest.generateTestUser();
-        Long userId = userService.addUser(user).getId();
+        em.persist(user);
+        Long userId = user.getId();
         Item item = generateItem(userId);
         Long itemId = itemService.addItem(item).getId();
         List<Item> list = itemService.search("something");

@@ -8,7 +8,7 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
-import ru.practicum.shareit.item.dto.Comment;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 
 import java.util.Map;
@@ -51,7 +51,7 @@ public class ItemClient extends BaseClient {
         return get("/search?text={text}", 0L, parameters);
     }
 
-    public ResponseEntity<Object> addComment(Long userId, Long itemId, Comment comment) {
+    public ResponseEntity<Object> addComment(Long userId, Long itemId, CommentDto comment) {
         return post("/" + itemId + "/comment", userId, comment);
     }
 
